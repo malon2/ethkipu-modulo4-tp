@@ -1,12 +1,10 @@
-# Module 4 Practical Work: SimpleSwap DApp
+# Module 4: SimpleSwap DApp
 
 ## Description
 
 This project implements a SimpleSwap in Solidity, with a minimal and functional front-end, and automated tests using Hardhat. It allows you to connect a wallet, check the price, swap ERC20 tokens (A ↔ B), and is deployed on GitHub Pages.
 
 ---
-
-## Requirements Met
 
 ### Contract Interaction
 - The front-end allows you to connect MetaMask, check the price, and swap between Token A and Token B.
