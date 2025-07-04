@@ -1,4 +1,4 @@
-# Module 4: SimpleSwap DApp
+ # Module 4: SimpleSwap DApp
 
 ## Description
 
@@ -41,3 +41,6 @@ This project implements a SimpleSwap in Solidity, with a minimal and functional 
 
 ## FrontEnd
 - Frontend deployed with github pages (https://malon2.github.io/ethkipu-modulo4-tp/)
+
+## Demo
+- Demo video added (demo/demo.mp4)
