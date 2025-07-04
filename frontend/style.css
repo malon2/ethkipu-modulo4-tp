@@ -75,9 +75,30 @@ button:hover {
     margin: 18px 0 8px 0;
     font-size: 1.1rem;
     color: #636e72;
-    text-align: center;
+    text-align: left;
     background: linear-gradient(90deg, #f9d42333 0%, #a1ffce33 100%);
     border-radius: 6px;
-    padding: 8px 0;
+    padding: 8px 0 8px 12px;
     box-shadow: 0 1px 4px #43cea222;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+#refreshPriceBtn {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px 0;
+    font-size: 1rem;
+    min-width: 0;
+    background: #f9d423;
+    border: none;
+    border-radius: 4px;
+    color: #222;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin: 0;
+    height: 40px;
+}
+#refreshPriceBtn:hover {
+    background: #a1ffce;
 }

@@ -14,14 +14,19 @@
         <div class="swap-box">
             <div class="input-group">
                 <label for="tokenA">Token A</label>
-                <input type="number" id="tokenA" placeholder="Quantity of Token A">
+                <input type="number" id="tokenA" placeholder="Quantity of Token A" step="any">
             </div>
             <div class="input-group">
                 <label for="tokenB">Token B</label>
-                <input type="number" id="tokenB" placeholder="Quantity of Token B">
+                <input type="number" id="tokenB" placeholder="Quantity of Token B" step="any">
             </div>
-            <div class="price-group">
-                <span>Price:</span> <span id="price">-</span>
+            <div style="display: flex; align-items: center; width: 100%;">
+                <div class="price-group" style="width: 75%; margin: 0;">
+                    <span>Price:</span> <span id="price">-</span>
+                </div>
+                <div style="width: 25%; text-align: right;">
+                    <button id="refreshPriceBtn" style="padding:2px 8px;font-size:0.9em;line-height:1;min-width:32px;">Reload</button>
+                </div>
             </div>
             <button id="swapBtn">Swap</button>
         </div>
