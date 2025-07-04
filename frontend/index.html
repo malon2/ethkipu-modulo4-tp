@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SimpleSwap DApp</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Swap Tokens</h1>
+        <button id="connectBtn">Connect Wallet</button>
+        <div class="swap-box">
+            <div class="input-group">
+                <label for="tokenA">Token A</label>
+                <input type="number" id="tokenA" placeholder="Quantity of Token A">
+            </div>
+            <div class="input-group">
+                <label for="tokenB">Token B</label>
+                <input type="number" id="tokenB" placeholder="Quantity of Token B">
+            </div>
+            <div class="price-group">
+                <span>Price:</span> <span id="price">-</span>
+            </div>
+            <button id="swapBtn">Swap</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

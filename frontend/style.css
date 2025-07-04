@@ -1,0 +1,83 @@
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: linear-gradient(135deg, #f8ffae 0%, #43cea2 100%);
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-image:
+        radial-gradient(circle at 20% 20%, #f9d42355 20%, transparent 70%),
+        radial-gradient(circle at 80% 0%, #a1ffce55 20%, transparent 70%),
+        radial-gradient(circle at 80% 80%, #30cfd055 20%, transparent 70%),
+        radial-gradient(circle at 0% 80%, #fdc09455 20%, transparent 70%);
+}
+.container {
+    max-width: 400px;
+    margin: 40px auto;
+    background: rgba(255,255,255,0.90);
+    border-radius: 18px;
+    box-shadow: 0 4px 32px rgba(67,206,162,0.10);
+    padding: 32px 24px 24px 24px;
+    backdrop-filter: blur(2px);
+}
+h1 {
+    text-align: center;
+    color: #2d3436;
+    margin-bottom: 24px;
+    letter-spacing: 2px;
+    font-weight: 700;
+    text-shadow: 0 2px 8px #43cea233;
+}
+button {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(90deg, #f9d423 0%, #a1ffce 100%);
+    color: #2d3436;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    margin-top: 16px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px #43cea233;
+    transition: background 0.2s, color 0.2s;
+}
+button:hover {
+    background: linear-gradient(90deg, #30cfd0 0%, #fdc094 100%);
+    color: #fff;
+}
+.swap-box {
+    margin-top: 24px;
+}
+.input-group {
+    margin-bottom: 18px;
+}
+.input-group label {
+    display: block;
+    margin-bottom: 6px;
+    color: #636e72;
+    font-weight: 500;
+}
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1.5px solid #a1ffce;
+    border-radius: 6px;
+    font-size: 1rem;
+    background: rgba(255,255,255,0.7);
+    box-shadow: 0 1px 4px #43cea222;
+    transition: border 0.2s;
+}
+.input-group input:focus {
+    border: 1.5px solid #30cfd0;
+    outline: none;
+}
+.price-group {
+    margin: 18px 0 8px 0;
+    font-size: 1.1rem;
+    color: #636e72;
+    text-align: center;
+    background: linear-gradient(90deg, #f9d42333 0%, #a1ffce33 100%);
+    border-radius: 6px;
+    padding: 8px 0;
+    box-shadow: 0 1px 4px #43cea222;
+}
