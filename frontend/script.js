@@ -59,7 +59,9 @@ async function fetchPrice() {
     if (!simpleSwap) return;
     try {
         const price = await simpleSwap.getPrice(tokenAAddress, tokenBAddress);
-        priceSpan.innerText = (Number(price) / 1e18).toFixed(6);
+        // price is a BigNumber, convert to string then to float
+        const priceFloat = parseFloat(ethers.utils.formatUnits(price, 18));
+        priceSpan.innerText = ethers.utils.formatUnits(price, 18);
     } catch (e) {
         priceSpan.innerText = 'Error';
     }
@@ -78,12 +80,17 @@ swapBtn.onclick = async () => {
     }
     // Convert to wei
     const amountInWei = ethers.utils.parseUnits(amountIn, 18);
-    const amountOutMin = 1; // Minimum slippage, adjust as needed
     const path = [tokenAAddress, tokenBAddress];
     const to = account;
     const deadline = Math.floor(Date.now() / 1000) + 600; // 10 minutes
 
     try {
+        const reserveA = await simpleSwap.reserveA();
+        const reserveB = await simpleSwap.reserveB();
+        const amountOut = await simpleSwap.getAmountOut(amountInWei, reserveA, reserveB);
+        const slippage = 0.005; // 0.5%
+        const amountOutMin = amountOut.sub(amountOut.mul(slippage * 1000).div(1000));
+
         // Check if allowance is sufficient
         const tokenA = new ethers.Contract(tokenAAddress, erc20Abi, signer);
         const allowance = await tokenA.allowance(account, simpleSwapAddress);
