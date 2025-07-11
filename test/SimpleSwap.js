@@ -23,6 +23,211 @@ describe("SimpleSwap", function() {
         await tokenB.approve(swap.target, initialSupply);
     });
 
+    it("should revert if addLiquidity results in zero liquidity", async function() {
+        await expect(
+            swap.addLiquidity(
+                tokenA.target,
+                tokenB.target,
+                0,
+                0,
+                0,
+                0,
+                owner.address,
+                (await ethers.provider.getBlock('latest')).timestamp + 1000
+            )
+        ).to.be.revertedWith("Zero liquidity");
+    });
+
+    it("should revert if addLiquidity with low A or B", async function() {
+        const amountA = toWei(1000);
+        const amountB = toWei(2000);
+        await expect(
+            swap.addLiquidity(
+                tokenA.target,
+                tokenB.target,
+                amountA,
+                amountB,
+                amountA + 1n,
+                amountB,
+                owner.address,
+                (await ethers.provider.getBlock('latest')).timestamp + 1000
+            )
+        ).to.be.revertedWith("Low A");
+        await expect(
+            swap.addLiquidity(
+                tokenA.target,
+                tokenB.target,
+                amountA,
+                amountB,
+                amountA,
+                amountB + 1n,
+                owner.address,
+                (await ethers.provider.getBlock('latest')).timestamp + 1000
+            )
+        ).to.be.revertedWith("Low B");
+    });
+
+    it("should revert removeLiquidity with low A or B", async function() {
+        const amountA = toWei(1000);
+        const amountB = toWei(2000);
+        await swap.addLiquidity(
+            tokenA.target,
+            tokenB.target,
+            amountA,
+            amountB,
+            amountA,
+            amountB,
+            owner.address,
+            (await ethers.provider.getBlock('latest')).timestamp + 1000
+        );
+        const liquidity = await swap.balanceOf(owner.address);
+        await swap.approve(swap.target, liquidity);
+        await expect(
+            swap.removeLiquidity(
+                tokenA.target,
+                tokenB.target,
+                liquidity,
+                toWei(100000), // too high
+                1,
+                owner.address,
+                (await ethers.provider.getBlock('latest')).timestamp + 1000
+            )
+        ).to.be.revertedWith("Low A");
+        await expect(
+            swap.removeLiquidity(
+                tokenA.target,
+                tokenB.target,
+                liquidity,
+                1,
+                toWei(100000), // too high
+                owner.address,
+                (await ethers.provider.getBlock('latest')).timestamp + 1000
+            )
+        ).to.be.revertedWith("Low B");
+    });
+
+    it("should revert removeLiquidity with not enough LP", async function() {
+        const amountA = toWei(1000);
+        const amountB = toWei(2000);
+        await swap.addLiquidity(
+            tokenA.target,
+            tokenB.target,
+            amountA,
+            amountB,
+            amountA,
+            amountB,
+            owner.address,
+            (await ethers.provider.getBlock('latest')).timestamp + 1000
+        );
+        const liquidity = await swap.balanceOf(owner.address);
+        await swap.approve(swap.target, liquidity);
+        await expect(
+            swap.connect(user1).removeLiquidity(
+                tokenA.target,
+                tokenB.target,
+                liquidity,
+                1,
+                1,
+                user1.address,
+                (await ethers.provider.getBlock('latest')).timestamp + 1000
+            )
+        ).to.be.revertedWith("Not enough LP");
+    });
+
+    it("should revert swap with invalid path", async function() {
+        const amountA = toWei(1000);
+        const amountB = toWei(2000);
+        await swap.addLiquidity(
+            tokenA.target,
+            tokenB.target,
+            amountA,
+            amountB,
+            amountA,
+            amountB,
+            owner.address,
+            (await ethers.provider.getBlock('latest')).timestamp + 1000
+        );
+        await tokenA.transfer(user1.address, amountA);
+        await tokenA.connect(user1).approve(swap.target, amountA);
+        await expect(
+            swap.connect(user1).swapExactTokensForTokens(
+                toWei(100),
+                1,
+                [tokenA.target], // invalid path
+                user1.address,
+                (await ethers.provider.getBlock('latest')).timestamp + 1000
+            )
+        ).to.be.revertedWith("Only 2-token swaps");
+    });
+
+    it("should revert swap with invalid token pair", async function() {
+        const amountA = toWei(1000);
+        const amountB = toWei(2000);
+        await swap.addLiquidity(
+            tokenA.target,
+            tokenB.target,
+            amountA,
+            amountB,
+            amountA,
+            amountB,
+            owner.address,
+            (await ethers.provider.getBlock('latest')).timestamp + 1000
+        );
+        await tokenA.transfer(user1.address, amountA);
+        await tokenA.connect(user1).approve(swap.target, amountA);
+        await expect(
+            swap.connect(user1).swapExactTokensForTokens(
+                toWei(100),
+                1,
+                [tokenA.target, user2.address], // invalid pair
+                user1.address,
+                (await ethers.provider.getBlock('latest')).timestamp + 1000
+            )
+        ).to.be.revertedWith("Invalid swap path");
+    });
+
+    it("should revert swap with slippage", async function() {
+        const amountA = toWei(1000);
+        const amountB = toWei(2000);
+        await swap.addLiquidity(
+            tokenA.target,
+            tokenB.target,
+            amountA,
+            amountB,
+            amountA,
+            amountB,
+            owner.address,
+            (await ethers.provider.getBlock('latest')).timestamp + 1000
+        );
+        await tokenA.transfer(user1.address, amountA);
+        await tokenA.connect(user1).approve(swap.target, amountA);
+        const path = [tokenA.target, tokenB.target];
+        await expect(
+            swap.connect(user1).swapExactTokensForTokens(
+                toWei(100),
+                toWei(1000), // too high minOut
+                path,
+                user1.address,
+                (await ethers.provider.getBlock('latest')).timestamp + 1000
+            )
+        ).to.be.revertedWith("Slippage");
+    });
+
+    it("should revert swap with empty reserves", async function() {
+        const path = [tokenA.target, tokenB.target];
+        await tokenA.transfer(user1.address, toWei(100));
+        await tokenA.connect(user1).approve(swap.target, toWei(100));
+        await expect(
+            swap.connect(user1).swapExactTokensForTokens(
+                toWei(100),
+                1,
+                path,
+                user1.address,
+                (await ethers.provider.getBlock('latest')).timestamp + 1000
+            )
+        ).to.be.reverted;
+    });
+
     it("should initialize token addresses on first addLiquidity", async function() {
         const amountA = toWei(1000);
         const amountB = toWei(2000);
@@ -291,5 +496,6 @@ describe("SimpleSwap", function() {
             swap.getAmountOut(amountIn, 0, 0)
         ).to.be.revertedWith("Empty reserves");
     });
+
 
 });
