@@ -1,3 +1,11 @@
+# Node modules
+node_modules/
+
+# Hardhat artifacts
+artifacts/
+cache/
+coverage/
+
 # Logs
 logs/
 *.log
@@ -9,6 +17,10 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 
+# Env files
+.env
+.env.*
+
 # VSCode
 .vscode/
 
@@ -19,3 +31,14 @@ frontend/build/
 # Misc
 *.tsbuildinfo
 
+# Hardhat config local
+.hardhat/
+
+# Ignore test coverage
+coverage/
+
+# Ignore deployments (if used)
+deployments/
+
+# Ignore frontend node_modules
+frontend/node_modules/
