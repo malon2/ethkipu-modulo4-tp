@@ -9,18 +9,6 @@ import "@openzeppelin/contracts/utils/math/Math.sol";
 /// @title SimpleSwap
 /// @dev Inherits ERC20 to represent LP tokens. Tokens are set at first addLiquidity call.
 contract SimpleSwap is ERC20 {
-    using SafeERC20 for IERC20;
-
-    /// @notice Token A address (set at first liquidity addition)
-    address public tokenAAddres;
-    /// @notice Token B address (set at first liquidity addition)
-    address public tokenBAddres;
-
-    /// @notice Current reserve of token A
-    uint256 public reserveA;
-    /// @notice Current reserve of token B
-    uint256 public reserveB;
-
     /// @notice Emitted when liquidity is added to the pool
     /// @param provider Address providing liquidity
     /// @param amountA Amount of token A deposited
@@ -42,6 +30,17 @@ contract SimpleSwap is ERC20 {
     /// @param amountIn Amount of input token swapped
     /// @param amountOut Amount of output token received
     event Swap(address indexed trader, address tokenIn, address tokenOut, uint256 amountIn, uint256 amountOut);
+    using SafeERC20 for IERC20;
+
+    /// @notice Token A address (set at first liquidity addition)
+    address public tokenAAddres;
+    /// @notice Token B address (set at first liquidity addition)
+    address public tokenBAddres;
+
+    /// @notice Current reserve of token A
+    uint256 public reserveA;
+    /// @notice Current reserve of token B
+    uint256 public reserveB;
 
     /// @dev Initializes LP token with name and symbol
     constructor() ERC20("LIQUIDITY", "LP") {}
@@ -185,14 +184,9 @@ contract SimpleSwap is ERC20 {
 
         address tokenIn = path[0];
         address tokenOut = path[1];
+
         address _tokenAAddres = tokenAAddres;
         address _tokenBAddres = tokenBAddres;
-
-        // Read reserves once
-        uint256 _reserveA = reserveA;
-        uint256 _reserveB = reserveB;
-        uint256 reserveIn;
-        uint256 reserveOut;
 
         require(
             (tokenIn == _tokenAAddres && tokenOut == _tokenBAddres) ||
@@ -200,31 +194,22 @@ contract SimpleSwap is ERC20 {
             "Invalid swap path"
         );
 
-        if (tokenIn == _tokenAAddres) {
-            reserveIn = _reserveA;
-            reserveOut = _reserveB;
-        } else {
-            reserveIn = _reserveB;
-            reserveOut = _reserveA;
-        }
+        (uint256 reserveIn, uint256 reserveOut) = tokenIn == _tokenAAddres
+            ? (reserveA, reserveB)
+            : (reserveB, reserveA);
 
         IERC20(tokenIn).safeTransferFrom(msg.sender, address(this), amountIn);
 
         uint256 amountOut = (amountIn * reserveOut) / (reserveIn + amountIn);
         require(amountOut >= amountOutMin, "Slippage");
 
-        // Update local reserves
         if (tokenIn == _tokenAAddres) {
-            _reserveA += amountIn;
-            _reserveB -= amountOut;
+            reserveA += amountIn;
+            reserveB -= amountOut;
         } else {
-            _reserveB += amountIn;
-            _reserveA -= amountOut;
+            reserveB += amountIn;
+            reserveA -= amountOut;
         }
-
-        // Write back to state
-        reserveA = _reserveA;
-        reserveB = _reserveB;
 
         IERC20(tokenOut).safeTransfer(to, amountOut);
         emit Swap(msg.sender, tokenIn, tokenOut, amountIn, amountOut);
