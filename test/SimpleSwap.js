@@ -18,7 +18,6 @@ describe("SimpleSwap", function() {
         const SimpleSwap = await ethers.getContractFactory("SimpleSwap");
         swap = await SimpleSwap.deploy();
         await swap.waitForDeployment();
-        // Approve tokens for swap contract
         await tokenA.approve(swap.target, initialSupply);
         await tokenB.approve(swap.target, initialSupply);
     });
@@ -87,7 +86,7 @@ describe("SimpleSwap", function() {
                 tokenA.target,
                 tokenB.target,
                 liquidity,
-                toWei(100000), // too high
+                toWei(100000),
                 1,
                 owner.address,
                 (await ethers.provider.getBlock('latest')).timestamp + 1000
@@ -99,7 +98,7 @@ describe("SimpleSwap", function() {
                 tokenB.target,
                 liquidity,
                 1,
-                toWei(100000), // too high
+                toWei(100000),
                 owner.address,
                 (await ethers.provider.getBlock('latest')).timestamp + 1000
             )
@@ -153,7 +152,7 @@ describe("SimpleSwap", function() {
             swap.connect(user1).swapExactTokensForTokens(
                 toWei(100),
                 1,
-                [tokenA.target], // invalid path
+                [tokenA.target],
                 user1.address,
                 (await ethers.provider.getBlock('latest')).timestamp + 1000
             )
@@ -179,7 +178,7 @@ describe("SimpleSwap", function() {
             swap.connect(user1).swapExactTokensForTokens(
                 toWei(100),
                 1,
-                [tokenA.target, user2.address], // invalid pair
+                [tokenA.target, user2.address],
                 user1.address,
                 (await ethers.provider.getBlock('latest')).timestamp + 1000
             )
@@ -205,7 +204,7 @@ describe("SimpleSwap", function() {
         await expect(
             swap.connect(user1).swapExactTokensForTokens(
                 toWei(100),
-                toWei(1000), // too high minOut
+                toWei(1000), 
                 path,
                 user1.address,
                 (await ethers.provider.getBlock('latest')).timestamp + 1000
@@ -274,7 +273,7 @@ describe("SimpleSwap", function() {
                 amountA,
                 amountB,
                 owner.address,
-                1 // expired
+                1 
             )
         ).to.be.revertedWith("Expired");
     });
@@ -377,7 +376,7 @@ describe("SimpleSwap", function() {
                 1,
                 1,
                 owner.address,
-                1 // expired
+                1 
             )
         ).to.be.revertedWith("Expired");
     });
@@ -395,7 +394,6 @@ describe("SimpleSwap", function() {
             owner.address,
             (await ethers.provider.getBlock('latest')).timestamp + 1000
         );
-        // Transfer tokens to user1 and approve
         await tokenA.transfer(user1.address, amountA);
         await tokenA.connect(user1).approve(swap.target, amountA);
         const path = [tokenA.target, tokenB.target];
@@ -434,7 +432,7 @@ describe("SimpleSwap", function() {
                 1,
                 path,
                 user1.address,
-                1 // expired
+                1 
             )
         ).to.be.revertedWith("Expired");
     });
