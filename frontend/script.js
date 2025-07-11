@@ -18,6 +18,8 @@ const tokenBInput = document.getElementById('tokenB');
 const swapBtn = document.getElementById('swapBtn');
 const priceSpan = document.getElementById('price');
 const refreshPriceBtn = document.getElementById('refreshPriceBtn');
+const refreshAmountBtn = document.getElementById('refreshAmountBtn');
+const receiveValue = document.getElementById('receiveValue');
 
 // Add wallet status label
 defineWalletStatusLabel();
@@ -65,6 +67,27 @@ async function fetchPrice() {
     } catch (e) {
         priceSpan.innerText = 'Error';
     }
+}
+
+// --- Calculate and show receive amount using getAmountOut ---
+async function updateReceiveAmount() {
+    if (!simpleSwap || !tokenAInput.value || Number(tokenAInput.value) <= 0) {
+        receiveValue.innerText = '-';
+        return;
+    }
+    try {
+        const amountInWei = ethers.utils.parseUnits(tokenAInput.value, 18);
+        const reserveA = await simpleSwap.reserveA();
+        const reserveB = await simpleSwap.reserveB();
+        const amountOut = await simpleSwap.getAmountOut(amountInWei, reserveA, reserveB);
+        receiveValue.innerText = ethers.utils.formatUnits(amountOut, 18);
+    } catch (e) {
+        receiveValue.innerText = '-';
+    }
+}
+
+if (refreshAmountBtn) {
+    refreshAmountBtn.onclick = updateReceiveAmount;
 }
 
 // --- Swap tokens ---
@@ -120,6 +143,7 @@ tokenBInput.addEventListener('input', fetchPrice);
 if (refreshPriceBtn) {
     refreshPriceBtn.onclick = fetchPrice;
 }
+
 
 // --- Wallet status label helpers ---
 function defineWalletStatusLabel() {
