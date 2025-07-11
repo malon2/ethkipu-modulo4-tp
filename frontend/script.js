@@ -143,3 +143,26 @@ function updateWalletStatus(connected) {
         label.style.color = '#c0392b';
     }
 }
+
+// --- Faucet: Mint both tokens ---
+const faucetBtn = document.getElementById('faucetBtn');
+if (faucetBtn) {
+    faucetBtn.onclick = async () => {
+        if (!signer || !account) {
+            alert('Connect wallet first');
+            return;
+        }
+        const mintAmount = ethers.utils.parseUnits('10', 18);
+        const tokenA = new ethers.Contract(tokenAAddress, erc20Abi, signer);
+        const tokenB = new ethers.Contract(tokenBAddress, erc20Abi, signer);
+        try {
+            const txA = await tokenA.mint(account, mintAmount);
+            await txA.wait();
+            const txB = await tokenB.mint(account, mintAmount);
+            await txB.wait();
+            alert('Minted 10 HTokenA and 10 HTokenB to your wallet!');
+        } catch (err) {
+            alert('Mint failed: ' + (err?.info?.error?.message || err.message));
+        }
+    };
+}
