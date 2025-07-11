@@ -9,6 +9,8 @@ import "@openzeppelin/contracts/utils/math/Math.sol";
 /// @title SimpleSwap
 /// @dev Inherits ERC20 to represent LP tokens. Tokens are set at first addLiquidity call.
 contract SimpleSwap is ERC20 {
+    using SafeERC20 for IERC20;
+
     /// @notice Emitted when liquidity is added to the pool
     /// @param provider Address providing liquidity
     /// @param amountA Amount of token A deposited
@@ -30,7 +32,6 @@ contract SimpleSwap is ERC20 {
     /// @param amountIn Amount of input token swapped
     /// @param amountOut Amount of output token received
     event Swap(address indexed trader, address tokenIn, address tokenOut, uint256 amountIn, uint256 amountOut);
-    using SafeERC20 for IERC20;
 
     /// @notice Token A address (set at first liquidity addition)
     address public tokenAAddres;
