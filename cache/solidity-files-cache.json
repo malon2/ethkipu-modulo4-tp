@@ -459,8 +459,8 @@
       ]
     },
     "/home/hernan/proyects/ethkipu/ethkipu-modulo4-tp/contracts/SimpleSwap.sol": {
-      "lastModificationDate": 1752257452558,
-      "contentHash": "19bcca931e82c350d3e5c452ea43e3a7",
+      "lastModificationDate": 1752258308585,
+      "contentHash": "3726b7ecf77d9e5abacf8570b53ef5b3",
       "sourceName": "contracts/SimpleSwap.sol",
       "solcConfig": {
         "version": "0.8.28",

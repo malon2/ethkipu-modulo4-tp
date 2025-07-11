@@ -182,10 +182,17 @@ contract SimpleSwap is ERC20 {
     ) external {
         require(block.timestamp <= deadline, "Expired");
         require(path.length == 2, "Only 2-token swaps");
+        _swapExactTokensForTokens(amountIn, amountOutMin, path[0], path[1], to);
+    }
 
-        address tokenIn = path[0];
-        address tokenOut = path[1];
-
+    /// @notice Func to avoid Stack too deep
+    function _swapExactTokensForTokens(
+        uint256 amountIn,
+        uint256 amountOutMin,
+        address tokenIn,
+        address tokenOut,
+        address to
+    ) internal {
         address _tokenAAddres = tokenAAddres;
         address _tokenBAddres = tokenBAddres;
 
