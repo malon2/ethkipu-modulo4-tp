@@ -4,7 +4,36 @@
 
 This project implements a SimpleSwap in Solidity, with a minimal and functional front-end, and automated tests using Hardhat. It allows you to connect a wallet, check the price, swap ERC20 tokens (A ↔ B), and is deployed on GitHub Pages.
 
----
+## Table of Contents
+- [Description](#description)
+- [Features](#features)
+- [Requirements](#requirements)
+- [Installation](#installation)
+- [Contracts and Tokens](#contracts-and-tokens)
+- [Project Structure](#project-structure)
+- [Testing & Coverage](#testing--coverage)
+- [Frontend](#frontend)
+
+## Features
+- Swap between two ERC20 tokens (A -> B)
+- Add/remove liquidity and receive LP tokens
+- Price calculation and slippage protection
+- Frontend integration with MetaMask
+- Automated tests and coverage report
+
+## Requirements
+- Node.js >= 16.x
+- npm >= 8.x
+- Hardhat
+- MetaMask (for frontend interaction)
+
+## Installation
+Clone the repository and install dependencies:
+```bash
+git clone https://github.com/malon2/ethkipu-modulo4-tp.git
+cd ethkipu-modulo4-tp
+npm install
+```
 
 ### Contract Interaction
 - The front-end allows you to connect MetaMask, check the price, and swap between Token A and Token B.
@@ -27,7 +56,19 @@ This project implements a SimpleSwap in Solidity, with a minimal and functional 
 
 ---
 
-## Usage Instructions
+
+## Project Structure
+
+```
+contracts/         # Solidity contracts
+test/              # Hardhat tests
+frontend/          # Frontend code (HTML, JS, CSS)
+coverage/          # Coverage reports
+demo/              # Demo video
+ignition/          # Deployment scripts and info
+```
+
+## Testing & Coverage
 
 1. Install dependencies:
    ```bash
@@ -37,6 +78,17 @@ This project implements a SimpleSwap in Solidity, with a minimal and functional 
    ```bash
    npx hardhat test
    npx hardhat coverage
+   ```
+
+3. Compile contracts:
+   ```bash
+   npx hardhat compile
+   ```
+4. Deploy contracts locally or to Sepolia:
+   ```bash
+   npx hardhat run scripts/deploy.js --network localhost
+   # or
+   npx hardhat run scripts/deploy.js --network sepolia
    ```
 
 ## FrontEnd
