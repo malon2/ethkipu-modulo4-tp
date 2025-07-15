@@ -185,7 +185,12 @@ contract SimpleSwap is ERC20 {
         _swapExactTokensForTokens(amountIn, amountOutMin, path[0], path[1], to);
     }
 
-    /// @notice Func to avoid Stack too deep
+    /// @notice Internal swap logic to avoid Stack too deep error
+    /// @param amountIn Amount of input token to swap
+    /// @param amountOutMin Minimum acceptable amount of output token
+    /// @param tokenIn Address of input token
+    /// @param tokenOut Address of output token
+    /// @param to Address to receive the output token
     function _swapExactTokensForTokens(
         uint256 amountIn,
         uint256 amountOutMin,
@@ -249,11 +254,11 @@ contract SimpleSwap is ERC20 {
     /// @param amountIn Amount of input token
     /// @param reserveIn Reserve of input token
     /// @param reserveOut Reserve of output token
-    /// @return Output token amount
+    /// @return amountOut Output token amount
     function getAmountOut(uint256 amountIn, uint256 reserveIn, uint256 reserveOut)
         external
         pure
-        returns (uint256)
+        returns (uint256 amountOut)
     {
         require(amountIn > 0, "Zero input");
         require(reserveIn > 0 && reserveOut > 0, "Empty reserves");
